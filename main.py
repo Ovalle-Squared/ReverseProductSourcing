@@ -1,10 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
 
-"""def print_hi(name):
-    print(f'Hi, {name}') # Press Ctrl+F8 to toggle the breakpoint.
-"""
-
 
 def get_title(soup):
     title = soup.find("span", attrs={"id": 'productTitle'})
@@ -36,14 +32,14 @@ if __name__ == '__main__':
                     'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 '
                     'Safari/537.36', 'Accept-Language': 'en-US'})
 
-    ### COMPETITOR'S STOREFRONT ###
+    ### STOREFRONT ###
     storefrontURL = "https://www.amazon.com/s?me=AMNY61XEYVLRP&marketplaceID=ATVPDKIKX0DER" #eventually improve to take list of URLS
     storefrontWebpage =  requests.get(storefrontURL, headers=HEADERS)
     storefrontSoup = BeautifulSoup(storefrontWebpage.content, "lxml")
     compProductsData = storefrontSoup.find('span', attrs={"data-component-type": 's-search-results'})
     #print(compProductsData)
    
-    #title#
+    """#product titles#
     compTitleData = compProductsData.find_all('span', attrs= {"class": 'a-size-medium a-color-base a-text-normal'})
     #print(compTitleData)
     compProductTitles = []
@@ -53,9 +49,9 @@ if __name__ == '__main__':
     #print product list
         for title in compProductTitles:
             print(product)
-    
+    """
 
-    #URL#
+    #storefront product URLs#
     compProductURLs = []
     for url in compProductsData.find_all('a', href=True):
         if ("javascript:void" not in url['href']) and ("customerReviews" not in url['href']) and ("gp/" not in url['href']) and ("s?i=merchant" not in url['href']) and ("kindle-dbs" not in url['href']) and ("signin?" not in url['href']):
@@ -63,23 +59,20 @@ if __name__ == '__main__':
             if(result not in compProductURLs):
                 compProductURLs.append(result)
      
-    #print product url
+    """#print product url
     for url in compProductURLs:
         print(url)
+    """
     
-    
-    
-    #price#
-
     #productURL = "http://www.amazon.com/2023-National-Park-Foundation-Calendar/dp/1728250021/ref=sr_1_1?m=A3B6E79ULPISFM&marketplaceID=ATVPDKIKX0DER&qid=1672105901&s=merchant-items&sr=1-1"
+    #store products's title, price, and merchant URL##
     productWebpage = requests.get(productURL, headers=HEADERS)
     productSoup = BeautifulSoup(productWebpage.content, "lxml")
     if compProductURLs is not None:
         for productURL in compProductURLs:
             productWebpage = requests.get(productURL, headers=HEADERS)
             productSoup = BeautifulSoup(productWebpage.content, "lxml")
-            print(get_title(productSoup) + ", " get_price(productSoup) + ", " + productURL) 
-            # + ", " + productURL)
+            print(get_title(productSoup) + ", " get_price(productSoup) + ", " + productURL)
 
 
     
@@ -89,6 +82,7 @@ if __name__ == '__main__':
         index = url.find("ref=sr")
         marketProductURLS.append(url[:index])
     
+    #product URLs for Amazon market#
     for url in marketProductURLS: 
         productWebpage = requests.get(url, headers=HEADERS)
         productSoup = BeautifulSoup(productWebpage.content, "lxml")
